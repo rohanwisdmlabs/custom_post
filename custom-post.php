@@ -172,6 +172,56 @@ flush_rewrite_rules( false );
 add_action('init', 'create_custom_post_type');
 
 
+//shortcodes
+
+function custom_dropdown_shortcode($atts) {
+    // Extract shortcode attributes
+    extract(shortcode_atts(array(
+        'options' => '',
+        'selected' => '',
+        'name' => '',
+        'class' => '',
+		
+    ), $atts));
+
+    // Convert options attribute to array
+    $options_array = explode(',', $options);
+
+    // Generate dropdown HTML
+	$output='<form action="" method="post">';
+    $output .= '<select name="' . esc_attr($name) . '" class="' . esc_attr($class) . '">';
+
+    foreach ($options_array as $option) {
+        $option = trim($option);
+        $selected_attr = ($option == $selected) ? ' selected' : '';
+        $output .= '<option value="' . esc_attr($option) . '"' . $selected_attr . '>' . esc_html($option) . '</option>';
+    }
+
+    $output .= '</select>';
+	$output.='<select name="Posts" class="'.esc_attr($class). '">';
+	for($i=1;$i<=10;$i++)
+	{
+		$output.='<option value="'.$i.'">'.strval($i). '</option>';
+    }
+
+	$output.='<input type="submit" name="submit" value="Submit">';
+
+	$output.='</form>';
+
+    return $output;
+}
+add_shortcode('dropdown', 'custom_dropdown_shortcode');
+
+function validation()
+{
+if(isset($_POST['submit']))
+{
+  echo "hooray";
+}
+}
+add_action('init','validation');
+
+
 
 
 
