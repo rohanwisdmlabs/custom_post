@@ -222,7 +222,7 @@ if(isset($_POST['submit']))
 
 	$new_content.='<a href="' 
 	. get_permalink( $p->ID ) . '">' 
-	. $p->post_title . '</a> <br/>Title: ' . $p->post_title . '<br/>Post Id: '. $p->ID. '</br> Date: '.$p->post_date.'<br/>';
+	. $p->post_title . '</a> <br/>Title: ' . $p->post_title . '<br/>Post Id: '. $p->ID. '</br> Date: '.$p->post_date.'<br/>'.'Post Description: '.wp_trim_words($p->post_content).'<br/>';
 
 	
 }
