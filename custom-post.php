@@ -176,29 +176,20 @@ add_action('init', 'create_custom_post_type');
 
 function custom_dropdown_shortcode($atts) {
     // Extract shortcode attributes
-    extract(shortcode_atts(array(
-        'options' => '',
-        'selected' => '',
-        'name' => '',
-        'class' => '',
-		
-    ), $atts));
+    
 
     // Convert options attribute to array
-    $options_array = explode(',', $options);
+   
 
     // Generate dropdown HTML
 	$output='<form action="" method="post">';
-    $output .= '<select name="' . esc_attr($name) . '" class="' . esc_attr($class) . '">';
+    $output .= '<select name="Post_type" class="dropdown_class">';
 
-    foreach ($options_array as $option) {
-        $option = trim($option);
-        $selected_attr = ($option == $selected) ? ' selected' : '';
-        $output .= '<option value="' . esc_attr($option) . '"' . $selected_attr . '>' . esc_html($option) . '</option>';
-    }
+    $output.='<option value="session">Session</option>';
+	$output.='<option value="coursess">Courses</option>';
 
     $output .= '</select>';
-	$output.='<select name="Posts" class="'.esc_attr($class). '">';
+	$output.='<select name="Posts" class="dropdown_class">';
 	for($i=1;$i<=10;$i++)
 	{
 		$output.='<option value="'.$i.'">'.strval($i). '</option>';
@@ -212,15 +203,46 @@ function custom_dropdown_shortcode($atts) {
 }
 add_shortcode('dropdown', 'custom_dropdown_shortcode');
 
-function validation()
+function validation($content)
 {
 if(isset($_POST['submit']))
 {
-  echo "hooray";
-}
-}
-add_action('init','validation');
+   $post_type=$_POST['Post_type'];
+   $postCount=$_POST['Posts'];
+   
+   $args=array(
+	'post_type' => $post_type,
+	'numberposts' => $postCount,
+   );
 
+   $custom_post=get_posts($args);
+   $new_content="";
+
+   foreach ( $custom_post as $p ){
+
+	$new_content.='<a href="' 
+	. get_permalink( $p->ID ) . '">' 
+	. $p->post_title . '</a> <br/>Title: ' . $p->post_title . '<br/>Post Id: '. $p->ID. '</br> Date: '.$p->post_date.'<br/>';
+
+	
+}
+unset($_POST['submit']);
+unset($_POST['Post_type']);
+unset($_POST['Posts']);
+$content.=$new_content;
+return $content;
+}
+else{
+
+	return $content;
+}
+
+
+
+
+
+}
+add_filter('the_content','validation');
 
 
 
