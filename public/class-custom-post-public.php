@@ -100,4 +100,51 @@ class Custom_Post_Public {
 
 	}
 
+	function validation($content)
+{
+if(isset($_POST['submit']))
+{
+   $post_type=$_POST['Post_type'];
+   $postCount=$_POST['Posts'];
+   
+   $args=array(
+	'post_type' => $post_type,
+	'numberposts' => $postCount,
+   );
+
+   $custom_post=get_posts($args);
+   $new_content="<table class='table_data'>"
+   ."<tr><th>Post ID</th>"
+   ."<th>Post Title</th>"
+   ."<th>Description</th>"
+   ."<th>Slug</th>"
+   ."<th>Link</th>"
+   ."<th>Publish Date</th>"
+   ."</tr";
+
+  
+   foreach ( $custom_post as $p ){
+	$new_content.="<tr><td>".$p->ID."</td>"
+	."<td>".$p->post_title."</td>"
+	."<td>".wp_trim_words($p->post_content,20)."</td>"
+	."<td>".$p->post_name."</td>"
+	."<td>".get_permalink( $p->ID )."</td>"
+	."<td>".$p->post_date."</td></tr>";
+
+	// $new_content.='<a href="' 
+	// . get_permalink( $p->ID ) . '">' 
+	// . $p->post_title . '</a> <br/>Title: ' . $p->post_title . '<br/>Post Id: '. $p->ID. '</br> Date: '.$p->post_date.'<br/>'.'Post Description: '.wp_trim_words($p->post_content).'<br/>';
+
+	
+}
+$content.=$new_content;
+return $content;
+}
+else{
+	return $content;
+}
+}
+
+		
+
 }
