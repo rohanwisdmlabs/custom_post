@@ -195,7 +195,7 @@ function custom_dropdown_shortcode($atts) {
 		$output.='<option value="'.$i.'">'.strval($i). '</option>';
     }
 
-	$output.='<input type="submit" name="submit" value="Submit">';
+	$output.='<input type="submit" class="submit_btn" name="submit" value="Submit">';
 
 	$output.='</form>';
 
@@ -216,19 +216,32 @@ if(isset($_POST['submit']))
    );
 
    $custom_post=get_posts($args);
-   $new_content="";
+   $new_content="<table class='table_data'>"
+   ."<tr><td>Post ID</td>"
+   ."<td>Post Title</td>"
+   ."<td>Description</td>"
+   ."<td>Slug</td>"
+   ."<td>Link</td>"
+   ."<td>Publish Date</td>"
+   ."</tr";
 
+  
    foreach ( $custom_post as $p ){
+	$new_content.="<tr><td>".$p->ID."</td>"
+	."<td>".$p->post_title."</td>"
+	."<td>".wp_trim_words($p->post_content,300)."</td>"
+	."<td>".$p->post_name."</td>"
+	."<td>".get_permalink( $p->ID )."</td>"
+	."<td>".$p->post_date."</td></tr>";
 
-	$new_content.='<a href="' 
-	. get_permalink( $p->ID ) . '">' 
-	. $p->post_title . '</a> <br/>Title: ' . $p->post_title . '<br/>Post Id: '. $p->ID. '</br> Date: '.$p->post_date.'<br/>'.'Post Description: '.wp_trim_words($p->post_content).'<br/>';
+	// $new_content.='<a href="' 
+	// . get_permalink( $p->ID ) . '">' 
+	// . $p->post_title . '</a> <br/>Title: ' . $p->post_title . '<br/>Post Id: '. $p->ID. '</br> Date: '.$p->post_date.'<br/>'.'Post Description: '.wp_trim_words($p->post_content).'<br/>';
 
 	
 }
-unset($_POST['submit']);
-unset($_POST['Post_type']);
-unset($_POST['Posts']);
+
+
 $content.=$new_content;
 return $content;
 }
