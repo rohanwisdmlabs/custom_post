@@ -12,5 +12,9 @@
 }
 
 .table_data {
-  width: 100%;
+  border: 2px solid;
+}
+.table_style {
+  width: 50%;
+  margin-right: 30px;
 }

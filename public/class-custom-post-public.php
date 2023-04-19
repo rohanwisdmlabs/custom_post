@@ -109,34 +109,36 @@ if(isset($_POST['submit']))
    
    $args=array(
 	'post_type' => $post_type,
-	'numberposts' => $postCount,
+	'posts_per_page' => $postCount,
+	'orderby' => 'date',
+	'order' => 'ASC',
    );
 
-   $custom_post=get_posts($args);
-   $new_content="<table class='table_data'>"
+   $custom_post=new WP_Query($args);
+
+   $new_content="<div class='table_style'>"
+   ."<table class='table_data'>"
    ."<tr><th>Post ID</th>"
    ."<th>Post Title</th>"
    ."<th>Description</th>"
    ."<th>Slug</th>"
    ."<th>Link</th>"
    ."<th>Publish Date</th>"
-   ."</tr";
+   ."</tr>";
 
   
-   foreach ( $custom_post as $p ){
-	$new_content.="<tr><td>".$p->ID."</td>"
-	."<td>".$p->post_title."</td>"
-	."<td>".wp_trim_words($p->post_content,20)."</td>"
-	."<td>".$p->post_name."</td>"
-	."<td>".get_permalink( $p->ID )."</td>"
-	."<td>".$p->post_date."</td></tr>";
+   foreach ( $custom_post->posts as $post ){
+	$new_content.="<tr><td>".$post->ID."</td>"
+	."<td>".$post->post_title."</td>"
+	."<td>".wp_trim_words($post->post_content,20)."</td>"
+	."<td>".$post->post_name."</td>"
+	."<td>".get_permalink( $post->ID )."</td>"
+	."<td>".$post->post_date."</td></tr>";
 
-	// $new_content.='<a href="' 
-	// . get_permalink( $p->ID ) . '">' 
-	// . $p->post_title . '</a> <br/>Title: ' . $p->post_title . '<br/>Post Id: '. $p->ID. '</br> Date: '.$p->post_date.'<br/>'.'Post Description: '.wp_trim_words($p->post_content).'<br/>';
-
+	}
+	$new_content.="</div>";
 	
-}
+
 $content.=$new_content;
 return $content;
 }
